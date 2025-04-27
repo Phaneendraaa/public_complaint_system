@@ -30,9 +30,11 @@ jobs:
       # Step 4: Tag the image correctly for Docker Hub
       - name: Tag Docker images for Docker Hub
         run: |
-          IMAGE_NAME="phaneendrasharma1/public_complaint_repo:latest"
-          docker tag public_complaint_system-app $IMAGE_NAME  # Tag the app image with your Docker Hub repo
-          docker tag mongo phaneendrasharma1/public_complaint_repo:latest  # Tag mongo image with the same repo
+          IMAGE_NAME_APP="phaneendrasharma1/public_complaint_repo:public_complaint_system-app"  # Tag for the app service
+          IMAGE_NAME_MONGO="phaneendrasharma1/public_complaint_repo:mongo"  # Tag for the mongo service
+
+          docker tag public_complaint_system-app $IMAGE_NAME_APP  # Tag the app image with your Docker Hub repo
+          docker tag mongo $IMAGE_NAME_MONGO  # Tag mongo image with your Docker Hub repo
 
       # Step 5: Log in to Docker Hub
       - name: Log in to Docker Hub
@@ -40,9 +42,10 @@ jobs:
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       # Step 6: Push the Docker images to Docker Hub
-      - name: Push Docker images to Docker Hub
+      - name: Push Docker images
         run: |
-          docker push phaneendrasharma1/public_complaint_repo:latest  # Push the tagged image to Docker Hub
+          docker push phaneendrasharma1/public_complaint_repo:public_complaint_system-app  # Push the app image
+          docker push phaneendrasharma1/public_complaint_repo:mongo  # Push the mongo image
 
       # Step 7: Optional - Tear down services after the job is finished
       - name: Tear down services
