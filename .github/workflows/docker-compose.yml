@@ -23,21 +23,28 @@ jobs:
           docker compose --version  # Verify Docker Compose installation
 
       # Step 3: Build the Docker images using Docker Compose
-      - name: Build Docker Image
+      - name: Build Docker Compose images
         run: |
-          docker compose up -d --build  # Build the images as defined in your docker-compose.yml
+          docker compose -d --build  # Build the images as defined in your docker-compose.yml
 
-      # Step 4: Log in to Docker Hub
+      # Step 4: Tag the image correctly for Docker Hub
+      - name: Tag Docker images for Docker Hub
+        run: |
+          IMAGE_NAME="phaneendrasharma1/public_complaint_repo:latest"
+          docker tag public_complaint_system-app $IMAGE_NAME  # Tag the app image with your Docker Hub repo
+          docker tag mongo phaneendrasharma1/public_complaint_repo:latest  # Tag mongo image with the same repo
+
+      # Step 5: Log in to Docker Hub
       - name: Log in to Docker Hub
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      # Step 5: Push the Docker image to Docker Hub using Docker Compose
-      - name: Push Docker image
+      # Step 6: Push the Docker images to Docker Hub
+      - name: Push Docker images to Docker Hub
         run: |
-          docker compose push  # Push the built images to Docker Hub
+          docker push phaneendrasharma1/public_complaint_repo:latest  # Push the tagged image to Docker Hub
 
-      # Step 6: Optional - Tear down services after the job is finished
+      # Step 7: Optional - Tear down services after the job is finished
       - name: Tear down services
         if: always()
         run: |
