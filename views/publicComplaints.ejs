@@ -18,6 +18,7 @@
             max-width: 1200px;
             margin: 20px auto;
             gap: 20px;
+            margin-top: 70px;
         }
 
         /* Sidebar Styles */
@@ -112,89 +113,153 @@
             border-radius: 10px; /* Rounded corners for aesthetics */
             background-color: #f4f4f4; /* Fallback background color for transparent images */
         }
+        img{
+            margin-top: 10px;
+        }
+        #openMapButton a{
+            padding:5px;
+            color: black;
+            text-decoration: none;
+            color:white;
+            font-weight: bolder;
+            
+        }
+        #openMapButton{
+            background-color: black;
+            color:white;
+            border:2px solid black;
+            border-radius: 10px;
+            height:40px;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: 0.3s;
+        }
+        #openMapButton:hover{
+            background-color: red;
+            border:1px solid red;
+
+        }
+        #apply{
+            background-color: #4CAF50;
+            border: none;
+            color:white;
+            width: 130px;
+            height: 40px;
+            margin-left: 75px;
+            margin-top: 15px;
+            cursor: pointer;
+            border-radius: 30px;
+        }
+        #apply:hover{
+                background-color: black;
+        }
     </style>
 </head>
 <body>
-
+    <a href="/home" style="
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+"
+onmouseover="this.style.backgroundColor='#45a049'; this.style.color='#e8e8e8';"
+onmouseout="this.style.backgroundColor='#4CAF50'; this.style.color='#ffffff';"
+>
+    Back To Home
+</a>
     <div class="container">
         <!-- Sidebar -->
-        <div class="sidebar">
-            <h3>Filter Complaints</h3>
-            <div class="filter-section">
-                <label for="filter-date">By Date:</label>
-                <select id="filter-date" onchange="filterPosts()">
-                    <option value="all">All Dates</option>
-                    <option value="today">Today</option>
-                    <option value="thisWeek">This Week</option>
-                </select>
-            </div>
-            <div class="filter-section">
-                <label for="filter-city">By City:</label>
-                <select id="filter-city" onchange="filterPosts()">
-                    <option value="all">All Cities</option>
-                    <option value="mumbai">Mumbai</option>
-                    <option value="delhi">Delhi</option>
-                    <option value="bangalore">Bangalore</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Complaints Feed -->
+        
+       
         <div class="feed">
             <div class="create-complaint" onclick="window.location.href='/createComplaint'">
                 + Create a Complaint
             </div>
-            <div id="posts-container">
-                <!-- Post 1 -->
-                <div class="post" data-date="today" data-city="mumbai">
-                    <div class="post-header">
-                        <div class="username">JohnDoe</div>
-                        <div class="timestamp">Today at 10:30 AM</div>
-                    </div>
-                    <div class="post-description">Potholes on the main road causing heavy traffic. Immediate attention needed.</div>
-                    <img src="https://cdn.shopify.com/s/files/1/0274/7288/7913/files/MicrosoftTeams-image_32.jpg?v=1705315718" alt="Complaint Image" class="post-image">
-                </div>
+            <% allComplaints.forEach(function(eachComplaint) { %>
+                <div id="posts-container">
+                    
+                    <div class="post" data-date="today" data-city="mumbai">
+                        <div class="post-header">
+                            <div class="username">👤@<%= eachComplaint.user.username %></div>
+                            <div class="timestamp" id="filter-date">⏰ <%= eachComplaint.date %></div>
+                        </div>
+                        <div class="post-description">
+                            <p>📜 About complaint : <%= eachComplaint.description %></p>
 
-                <!-- Post 2 -->
-                <div class="post" data-date="thisWeek" data-city="delhi">
-                    <div class="post-header">
-                        <div class="username">JaneDoe</div>
-                        <div class="timestamp">This Week at 2:15 PM</div>
-                    </div>
-                    <div class="post-description">Overflowing garbage bins in Sector 45. The situation is unhygienic.</div>
-                    <img src="https://images.deccanherald.com/deccanherald%2F2024-11-01%2F87lsqjmu%2Ffile7xs0jakylmhsi0apeej.jpg?w=1200" alt="Complaint Image" class="post-image">
-                </div>
+                            <p><Address>📍 Address : <%= eachComplaint.address %></Address></p>
+                            <p id="filter-city">City : <%= eachComplaint.city %></p>
 
-                <!-- Post 3 -->
-                <div class="post" data-date="thisWeek" data-city="bangalore">
-                    <div class="post-header">
-                        <div class="username">SamSmith</div>
-                        <div class="timestamp">This Week at 5:45 PM</div>
+                        </div>
+                        <p> ✔️ Status : <%= eachComplaint.status %></p>
+                        <button id="openMapButton" onclick="openMap('<%= eachComplaint.latitude %>', '<%= eachComplaint.longitude %>')">
+                            🗺️ Get Directions to Location
+                        </button>
+
+  
+                        <img src="/images/uploads/<%= eachComplaint.image %>" alt="Complaint Image" class="post-image">
                     </div>
-                    <div class="post-description">Streetlights not working in my locality. Area remains dark and unsafe.</div>
-                    <img src="https://static.toiimg.com/thumb/msid-87248287,width-400,height-225,resizemode-72/87248287.jpg" alt="Complaint Image" class="post-image">
+    
                 </div>
-            </div>
+            <% }); %>
+            
         </div>
+        <div class="sidebar">
+            <h3>Filter Complaints</h3>
+            <div class="filter-section">
+                <form action="./filter-posts" method="post">
+                    <label for="filter-type">By Type of complaint:</label>
+                    <select id="filter-type" name="filterType">
+                        <option value="all" selected>All</option>
+                        <option value="roads">Roads</option>
+                        <option value="govt_infra">Infra</option>
+                        <option value="garbage">Garbage</option>
+                        <option value="other">Other</option>
+                    </select>
+                    
+                    <label for="filter-city">By City:</label>
+                    <select id="filter-city" name="filterCity">
+                        <option value="all" selected>All Cities</option>
+                        <option value="hyderabad">Hyderabad</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="bangalore">Bangalore</option>
+                    </select>
+                    
+                    <label for="filter-status">By Status:</label>
+                    <select id="filter-status" name="filterStatus">
+                        <option value="all" selected>All</option>
+                        <option value="pending">Pending</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                    
+                    <input type="submit" value="Apply Filters" id="apply">
+                </form>
+            </div>
+            
+        </div>
+
     </div>
-
+   
     <script>
-        function filterPosts() {
-            const dateFilter = document.getElementById("filter-date").value;
-            const cityFilter = document.getElementById("filter-city").value;
-            const posts = document.querySelectorAll(".post");
-
-            posts.forEach(post => {
-                const postDate = post.getAttribute("data-date");
-                const postCity = post.getAttribute("data-city");
-
-                if ((dateFilter === "all" || dateFilter === postDate) &&
-                    (cityFilter === "all" || cityFilter === postCity)) {
-                    post.style.display = "block";
-                } else {
-                    post.style.display = "none";
-                }
-            });
+        function openMap(latitude, longitude) {
+            // Check if latitude and longitude are provided
+            if (!latitude || !longitude) {
+                alert("Location coordinates are not available for this complaint.");
+                return;
+            }
+    
+            // Construct the Google Maps URL
+            const encodedLatitude = encodeURIComponent(latitude);
+            const encodedLongitude = encodeURIComponent(longitude);
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedLatitude},${encodedLongitude}`;
+    
+            // Open the map in a new tab
+            window.open(mapUrl, '_blank');
         }
     </script>
 </body>

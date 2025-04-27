@@ -14,6 +14,8 @@
             align-items: center;
             height: 100vh;
             background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
         }
         .signup-form {
             width: 300px;
@@ -56,17 +58,35 @@
         .signup-form button:hover {
             background-color: #0056b3;
         }
-        .login-link{
+        .login-link {
             text-align: center;
             margin-top: 10px;
-
         }
-        .login-link a{
+        .login-link a {
             color: #007BFF;
             text-decoration: none;
         }
-        .login-link a:hover{
+        .login-link a:hover {
             text-decoration: underline; 
+        }
+        
+        /* Admin login section outside the box */
+        .admin-login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .admin-login-link a {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .admin-login-link a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -88,6 +108,11 @@
         <div class="login-link">
             Already have an account? <a href="/login">Login</a>
         </div>
+    </div>
+
+    <!-- Admin Login Section Outside the Form Box -->
+    <div class="admin-login-link">
+        <span>Are you an Muncipal Corp official?  </span><a href="/adminlogin">Login Here</a>
     </div>
 </body>
 </html>

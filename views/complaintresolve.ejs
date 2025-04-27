@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Proof</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        .form-container h1 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .form-container input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background-color: #333;
+        }
+
+        #preview {
+            margin-top: 20px;
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Upload the Proof of Resolving the Complaint</h1>
+        <form id="proofForm" action="/upload-proof" method="post" enctype="multipart/form-data">
+            <input type="file" id="imageInput" accept="image/*" name="proof-image" required>
+            <button type="submit">Submit</button>
+        </form>
+        <img id="preview" alt="Preview of uploaded proof">
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const preview = document.getElementById('preview');
+        const proofForm = document.getElementById('proofForm');
+
+        // Show preview of the uploaded image
+        imageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    preview.src = reader.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+    </script>
+    <script>
+        // Submit the form via AJAX
+        const proofForm = document.getElementById('proofForm');
+        
+        proofForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            const formData = new FormData(proofForm); // Create a FormData object with the form data
+            
+            try {
+                // Send the form data using Fetch
+                const response = await fetch('/upload-proof', {
+                    method: 'POST',
+                    body: formData
+                });
+    
+                const result = await response.json();
+    
+                if (result.success) {
+                    // Show a success pop-up
+                    alert("Complaint resolved successfully!");
+    
+                    // After a short delay, redirect the user to the admin home page
+                    setTimeout(() => {
+                        window.location.href = '/adminhome'; // Redirect to admin home
+                    }, 3000); // Delay for 3 seconds before redirecting
+                } else {
+                    // Handle error
+                    alert("An error occurred while resolving the complaint.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Error occurred during file upload.");
+            }
+        });
+    </script>
+    
+</body>
+</html>

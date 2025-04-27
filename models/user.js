@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/postingapp");
+mongoose.connect(process.env.MONGO_URL);
 
 const userSchema = mongoose.Schema({
     username:String,
@@ -9,6 +9,10 @@ const userSchema = mongoose.Schema({
     complaints:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"complaint"
-    }]
+    }],
+    admin:{
+        type:Boolean,
+        default:false
+    }
 })
 module.exports = mongoose.model("user",userSchema);

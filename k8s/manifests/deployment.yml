@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: public-complaint-system
+  labels:
+    app: public-complaint-system
+spec:
+  replicas: 2  # Number of replicas/pods you want to run
+  selector:
+    matchLabels:
+      app: public-complaint-system
+  template:
+    metadata:
+      labels:
+        app: public-complaint-system
+    spec:
+      containers:
+        - name: public-complaint-system
+          image: phaneendrasharma1/public_complaint_repo:public_complaint_system-app-${{ github.sha }}
+          ports:
+            - containerPort: 80  # Expose port 80 for the application container
+          env:
+            - name: MONGO_URI
+              value: "mongodb://mongo:27017/public_complaint_db"  # MongoDB URI as an environment variable
+        - name: mongo
+          image: phaneendrasharma1/public_complaint_repo:mongo-${{ github.sha }}
+          ports:
+            - containerPort: 27017  # MongoDB port

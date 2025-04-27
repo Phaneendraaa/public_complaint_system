@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyderabad Municipal Corporation - Admin</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #343a40;
+            color: white;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #7b86fd;
+        }
+
+        /* Page Layout Styles */
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        #posts-container {
+            flex: 3;
+            margin-right: 20px;
+        }
+
+        .post {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .timestamp {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .post-description {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 10px;
+            background-color: #f4f4f4;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .add-queue, #openMapButton {
+            background-color: yellow;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-queue:hover, #openMapButton:hover {
+            background-color: red;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            flex: 1;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #7b86fd;
+        }
+
+        .filter-section label {
+            display: block;
+            margin: 10px 0 5px;
+            font-size: 0.9rem;
+        }
+
+        .filter-section select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 0.9rem;
+        }
+
+        #apply {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            width: 100%;
+            height: 40px;
+            margin-top: 15px;
+            cursor: pointer;
+            border-radius: 30px;
+        }
+
+        #apply:hover {
+            background-color: black;
+        }
+
+        /* No Complaints Message Styles */
+        .no-complaints-message {
+            padding: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin-top: 20px;
+            width:500px;
+            margin-left: 20px;
+        }
+
+        .no-complaints-message h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .no-complaints-message p {
+            font-size: 1rem;
+        }
+
+        .no-complaints-message img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <h1>Citizen Complaint Box</h1>
+        <div>
+            <a href="/queue">Queue</a>
+            <a href="/analytics">Analytics</a>
+            <a href="/admin-logout">Logout</a>
+        </div>
+    </div>
+
+    <header>
+        <h1 style="margin-left: 20px;">Welcome, <%= admin.username %> Municipal Corporation.</h1>
+    </header>
+
+    <!-- Display message if no complaints -->
+    <% if(pendingComplaints.length == 0) { %>
+        <div class="no-complaints-message">
+            <h2>🎉 Great News! 🎉</h2>
+            <p>There are currently no pending complaints. Keep up the great work!</p>
+        </div>
+    <% } %>
+
+    <div class="container">
+        <!-- Complaints Section -->
+        <div id="posts-container">
+            <% pendingComplaints.forEach(function(eachComplaint) { %>
+                <div class="post">
+                    <div class="post-header">
+                        <div class="username">👤 @<%= eachComplaint.user.username %></div>
+                        <div class="timestamp">⏰ <%= eachComplaint.date %></div>
+                    </div>
+                    <div class="post-description">
+                        <p>📜 About complaint: <%= eachComplaint.description %></p>
+                        <p><address>📍 Address: <%= eachComplaint.address %></address></p>
+                        <p>City: <%= eachComplaint.city %></p>
+                    </div>
+                    <p>✔️ Status: <%= eachComplaint.status %></p>
+                    <img src="/images/uploads/<%= eachComplaint.image %>" alt="Complaint Image" class="post-image">
+                    <div class="buttons">
+                        <form action="/addtoqueue/<%= eachComplaint._id %>">
+                            <button class="add-queue" type="submit">Add to Queue</button>
+                        </form>
+                        <button id="openMapButton" onclick="openMap('<%= eachComplaint.latitude %>', '<%= eachComplaint.longitude %>')">
+                            🗺️ Get Directions to Location
+                        </button>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+        <% if(empty > 0){ %>
+        
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h3>Filter Complaints</h3>
+            <div class="filter-section">
+                <form action="./filter-posts-admin" method="post">
+                    <label for="filter-type">By Type of complaint:</label>
+                    <select id="filter-type" name="filterType">
+                        <option value="all" selected>All</option>
+                        <option value="roads">Roads</option>
+                        <option value="govt_infra">Infra</option>
+                        <option value="garbage">Garbage</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                    <label for="filter-city">By City:</label>
+                    <select id="filter-city" name="filterCity">
+                        <option value="all" >All Cities</option>
+                        <option value="hyderabad" selected>Hyderabad</option>
+                    </select>
+
+                    <label for="filter-status">By Status:</label>
+                    <select id="filter-status" name="filterStatus">
+                        <option value="all" >All</option>
+                        <option value="pending" selected>Pending</option>
+                    </select>
+
+                    <input type="submit" value="Apply Filters" id="apply">
+                </form>
+            </div>
+        </div>
+    </div>
+    <% } %>
+    <script>
+        function openMap(latitude, longitude) {
+            if (!latitude || !longitude) {
+                alert("Location coordinates are not available for this complaint.");
+                return;
+            }
+
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(latitude)},${encodeURIComponent(longitude)}`;
+            window.open(mapUrl, '_blank');
+        }
+    </script>
+</body>
+</html>

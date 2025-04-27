@@ -5,222 +5,203 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complaint Form</title>
     <style>
-        /* General Styles */
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: white;
+            font-family: Arial, sans-serif;
+            background-color: #e1f7d5;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding:80px;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        }
-
-        .container {
-            width: 80%;
-            max-width: 500px;
-            background-color: #ffffff;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border-top: 8px solid #4CAF50;
         }
 
-        h1 {
-            text-align: center;
-            font-size: 2rem;
-            color: #333;
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 500px;
+            margin: auto;
+            border: 2px solid #4CAF50;
             margin-bottom: 20px;
+        }
+
+        h2 {
+            text-align: center;
             color: #4CAF50;
         }
 
         label {
-            font-size: 1rem;
-            color: #444;
-            margin-bottom: 10px;
             display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
         }
 
-        input, select, textarea {
+        select, textarea, input[type="file"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 1rem;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
             box-sizing: border-box;
-            transition: border-color 0.3s ease;
         }
 
-        input:focus, select:focus, textarea:focus {
-            border-color: #4CAF50;
-            outline: none;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-group input[type="file"] {
-            padding: 8px;
-            background-color: #f8f8f8;
-            border: 1px solid #ddd;
-        }
-
-        input[type="submit"] {
+        button {
             background-color: #4CAF50;
             color: white;
-            cursor: pointer;
-            font-size: 1.1rem;
+            padding: 10px;
             border: none;
-            transition: background-color 0.3s;
-            padding: 12px;
-            border-radius: 8px;
+            border-radius: 4px;
+            cursor: pointer;
             width: 100%;
+            font-size: 16px;
         }
 
-        input[type="submit"]:hover {
+        button:hover {
             background-color: #45a049;
         }
 
-        .error {
-            color: red;
-            font-size: 0.9rem;
-            text-align: center;
+        #locationDisplay {
             margin-top: 10px;
-        }
-
-        .success {
+            font-weight: bold;
             color: green;
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 10px;
         }
 
-        /* Add an optional image preview */
-        .image-preview {
+        /* Image preview style */
+        #imagePreview {
+            margin-top: 10px;
             max-width: 100%;
-            height: auto;
-            margin-top: 10px;
+            max-height: 300px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            object-fit: cover;
+            margin-bottom: 10px;
         }
-        .bod{
-            
-        }
-
     </style>
 </head>
 <body>
+    <a href="/home" style="
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+"
+onmouseover="this.style.backgroundColor='#45a049'; this.style.color='#e8e8e8';"
+onmouseout="this.style.backgroundColor='#4CAF50'; this.style.color='#ffffff';"
+>
+    Back To Home
+</a>
 
-    <div class="container">
-        <h1>Citizen Complaint Form</h1>
-        <form id="complaintForm" onsubmit="return validateForm()" enctype="multipart/form-data">
-            <!-- Complaint Type -->
-            <div class="form-group">
-                <label for="complaintType">Type of Complaint:</label>
+    <div class="form-container">
+        <h2>Submit Your Complaint</h2>
+        <form action="/ComplaintUpload" method="post" enctype="multipart/form-data">
+            <div>
+                <label for="complaintType">Select Complaint Type:</label>
                 <select id="complaintType" name="complaintType" required>
-                    <option value="">Select Complaint Type</option>
-                    <option value="road">Road</option>
-                    <option value="govtinfra">Government Infrastructure</option>
                     <option value="garbage">Garbage</option>
+                    <option value="roads">Roads</option>
+                    <option value="govt_infra">Govt Infra</option>
                     <option value="other">Other</option>
                 </select>
             </div>
-    
-            <!-- Description of Complaint -->
-            <div class="form-group">
-                <label for="description">Description of Complaint:</label>
-                <textarea id="description" name="description" placeholder="Please describe the issue..." required></textarea>
-            </div>
-    
-            <!-- Address -->
-            <div class="form-group">
+            <div>
                 <label for="address">Address:</label>
-                <input type="text" id="address" name="address" placeholder="Enter your address" required>
+                <textarea id="address" name="address" placeholder="Enter full address of the issue" required></textarea>
             </div>
-    
-            <!-- City -->
-            <div class="form-group">
-                <label for="city">City:</label>
+            <div>
+                <label for="city">Select City:</label>
                 <select id="city" name="city" required>
-                    <option value="">Select City</option>
-                    <option value="Mumbai">Mumbai</option>
                     <option value="Delhi">Delhi</option>
                     <option value="Bangalore">Bangalore</option>
-                    <option value="Kolkata">Kolkata</option>
-                    <option value="Chennai">Chennai</option>
-                    <option value="Hyderabad">Hyderabad</option>
-                    <option value="Pune">Pune</option>
-                    <option value="Ahmedabad">Ahmedabad</option>
-                    <option value="Surat">Surat</option>
-                    <option value="Jaipur">Jaipur</option>
+                    <option value="Hyderabad" selected>Hyderabad</option>
                 </select>
             </div>
-    
-            <!-- Image Upload -->
-            <div class="form-group">
+            <div>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" placeholder="Enter your complaint description here..." required></textarea>
+            </div>
+            <div>
                 <label for="image">Upload Image:</label>
-                <input type="file" id="image" name="image" accept="image/*" onchange="previewImage()" required>
+                <input type="file" id="image" name="image" accept="image/*" required onchange="previewImage()">
             </div>
-    
-            <!-- Image Preview -->
-            <img id="imagePreview" class="image-preview" src="#" alt="Image Preview" style="display:none;">
-    
-            <!-- Submit Button -->
-            <div class="form-group">
-                <input type="submit" value="Submit Complaint">
+            <!-- Image preview -->
+            <div id="imagePreviewContainer">
+                <img id="imagePreview" src="" alt="Image Preview" style="display:none;">
             </div>
-    
-            <!-- Message Display -->
-            <div id="message" class="error"></div>
+            <input type="hidden" id="latitude" name="latitude" required>
+            <input type="hidden" id="longitude" name="longitude" required>
+            <p>Note: Upload From the Exact location of Complaint.</p>
+            <button type="button" onclick="fetchLocation()">Get Live Location</button>
+            <div id="locationDisplay"></div>
+            <button type="submit" style="margin-top: 10px;">Submit Complaint</button>
         </form>
     </div>
 
+    <script>
+        // Preview uploaded image
+        function previewImage() {
+            const file = document.getElementById('image').files[0];
+            const reader = new FileReader();
 
+            reader.onloadend = function () {
+                const imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = reader.result;
+                imagePreview.style.display = 'block';
+            };
 
-<script>
-    // Function to validate the form
-    function validateForm() {
-        let complaintType = document.getElementById("complaintType").value;
-        let description = document.getElementById("description").value;
-        let address = document.getElementById("address").value;
-        let city = document.getElementById("city").value;
-        let message = document.getElementById("message");
-
-        if (!complaintType || !description || !address || !city) {
-            message.textContent = "Please fill in all the fields.";
-            message.classList.add("error");
-            message.classList.remove("success");
-            return false;
+            if (file) {
+                reader.readAsDataURL(file);
+            }
         }
 
-        message.textContent = "Complaint submitted successfully!";
-        message.classList.add("success");
-        message.classList.remove("error");
-        return true;
-    }
+        // Fetch geolocation
+        function fetchLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        // Successfully fetched location
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
 
-    // Function to preview the uploaded image
-    function previewImage() {
-        const file = document.getElementById("image").files[0];
-        const reader = new FileReader();
+                        // Fill hidden input fields
+                        document.getElementById("latitude").value = latitude;
+                        document.getElementById("longitude").value = longitude;
 
-        reader.onloadend = function() {
-            const imagePreview = document.getElementById("imagePreview");
-            imagePreview.src = reader.result;
-            imagePreview.style.display = "block";
+                        // Show location to the user
+                        document.getElementById("locationDisplay").textContent = 
+                            `Location fetched: Latitude: ${latitude}, Longitude: ${longitude}`;
+                    },
+                    (error) => {
+                        // Handle errors
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                alert("Permission denied. Please allow location access.");
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                alert("Position unavailable. Please try again later.");
+                                break;
+                            case error.TIMEOUT:
+                                alert("Request timed out. Please try again.");
+                                break;
+                            default:
+                                alert("An unknown error occurred.");
+                        }
+                    },
+                    {
+                        enableHighAccuracy: true, // Use GPS for accuracy
+                        timeout: 10000,          // Timeout after 10 seconds
+                        maximumAge: 0            // No cached locations
+                    }
+                );
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
         }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            document.getElementById("imagePreview").style.display = "none";
-        }
-    }
-</script>
-
+    </script>
 </body>
 </html>

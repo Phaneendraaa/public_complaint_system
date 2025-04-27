@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: public-complaint-system
+spec:
+  selector:
+    app: public-complaint-system
+  ports:
+    - protocol: TCP
+      port: 80  # Port the service will expose
+      targetPort: 80  # Port the container is listening on
+  type: LoadBalancer  # Expose the service via a LoadBalancer

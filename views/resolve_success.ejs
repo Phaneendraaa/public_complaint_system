@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Resolved</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .message-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+            max-width: 100%;
+        }
+
+        .message-container h1 {
+            color: #28a745;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .message-container p {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .message-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .message-container button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <h1>Complaint Resolved</h1>
+        <p>Congratulations! Your complaint has been successfully resolved.</p>
+        <p>Hope you continue the good work!</p>
+        <button id="backButton">Back to Queue</button>
+    </div>
+
+    <script>
+        // Button to go back to /queue page
+        document.getElementById('backButton').addEventListener('click', function() {
+            window.location.href = '/queue'; // Redirect to the /queue page
+        });
+    </script>
+</body>
+</html>

@@ -8,7 +8,7 @@
         /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f0f2f5;
             margin: 0;
             padding: 0;
         }
@@ -20,6 +20,7 @@
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            
         }
 
         .header {
@@ -29,17 +30,28 @@
 
         h1 {
             font-size: 2.5rem;
-            color: #4CAF50;
+            color: #262626;
+            margin-bottom: 20px;
         }
 
         .profile-info {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 20px;
-            background-color: #f1f1f1;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            border-bottom: 1px solid #e6e6e6;
+            background-color: #ffffff;
+        }
+
+        .profile-info .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #e6e6e6;
+            background-image: url('https://via.placeholder.com/120'); /* Default Profile Image */
+            background-size: cover;
+            background-position: center;
+            margin-right: 20px;
         }
 
         .profile-info .details {
@@ -47,8 +59,14 @@
             color: #333;
         }
 
+        .profile-info .details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
         .profile-info .details p {
-            margin: 10px 0;
+            margin: 5px 0;
+            color: #999;
         }
 
         .complaints-section {
@@ -74,13 +92,16 @@
             justify-content: space-between;
             align-items: center;
             font-size: 1.1rem;
-            color: #4CAF50;
             margin-bottom: 10px;
         }
 
-        .complaint-card .complaint-header .complaint-type {
+        .complaint-card .complaint-type {
             font-weight: bold;
-            color: #333;
+            color: #FF6F61;
+        }
+
+        .complaint-card .complaint-status {
+            color: #4CAF50;
         }
 
         .complaint-card .complaint-description {
@@ -89,21 +110,33 @@
             margin-bottom: 10px;
         }
 
-        .complaint-card .complaint-address {
-            font-size: 0.95rem;
-            color: #777;
-        }
-
+        .complaint-card .complaint-address,
         .complaint-card .complaint-city {
             font-size: 0.95rem;
             color: #777;
         }
 
+        .complaint-card .complaint-address::before {
+            content: "🏠 ";
+            font-size: 1.2rem;
+        }
+
+        .complaint-card .complaint-city::before {
+            content: "🌍 ";
+            font-size: 1.2rem;
+        }
+
+        .complaint-card .complaint-type::before {
+            content: "📝 ";
+            font-size: 1.5rem;
+        }
+
         .complaint-card .image-preview {
-            width: 100%;
+            width: 80%;
             height: auto;
             margin-top: 10px;
             border-radius: 5px;
+            object-fit: cover;
         }
 
         .btn {
@@ -121,76 +154,78 @@
         .btn:hover {
             background-color: #45a049;
         }
-
+        .header button{
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+        }
+        .header a{
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
     </style>
 </head>
 <body>
-
+    <a href="/home" style="
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+"
+onmouseover="this.style.backgroundColor='#45a049'; this.style.color='#e8e8e8';"
+onmouseout="this.style.backgroundColor='#4CAF50'; this.style.color='#ffffff';"
+>
+    Back To Home
+</a>
 <div class="container">
     <div class="header">
         <h1>User Profile</h1>
-        <button class="btn" onclick="editProfile()">Edit Profile</button>
+        <button><a  href="/editp">Edit Profile</a></button>
     </div>
 
     <!-- User Profile Info Section -->
     <div class="profile-info">
+        <div class="profile-photo">
+            <img src="" alt="">
+        </div> <!-- Default Profile Image -->
         <div class="details">
-            <h3>Username: <span id="username">JohnDoe</span></h3>
-            <p>Email: <span id="email">johndoe@gmail.com</span></p>
-            <p>Joined: <span id="joinDate">January 15, 2022</span></p>
-        </div>
-        <div class="profile-img">
-            <img src="https://via.placeholder.com/150" alt="User Avatar" style="border-radius: 50%; width: 150px;">
+            <h3>Username: <span id="username"><%= userDetails.username %></span></h3>
+            <p>Email: <span id="email"><%= userDetails.email %></span></p>
         </div>
     </div>
 
     <!-- User Complaints Section -->
     <div class="complaints-section">
-        <h2>User Complaints</h2>
-
-        <!-- Sample Complaint Card 1 -->
+        <h2>My Complaints</h2>
+        <% userDetails.complaints.forEach(function(eachComplaint){ %>
+                
         <div class="complaint-card">
             <div class="complaint-header">
-                <div class="complaint-type">Road Issue</div>
-                <div class="complaint-status">Status: Pending</div>
+                <div class="complaint-type">Complaint Type : <%= eachComplaint.complaintType %></div>
+                <div class="complaint-status"><%= eachComplaint.status %></div>
             </div>
-            <p class="complaint-description">The road near my house is damaged and full of potholes. It's dangerous for commuters.</p>
-            <p class="complaint-address">Address: 123, ABC Street</p>
-            <p class="complaint-city">City: Mumbai</p>
-            <img src="https://via.placeholder.com/400x300" alt="Complaint Image" class="image-preview">
+            <p class="complaint-description"><%= eachComplaint.description %></p>
+            <p class="complaint-address">Address: <%= eachComplaint.address %></p>
+            <p class="complaint-city">City: <%= eachComplaint.city %></p>
+            <img src="/images/uploads/<%= eachComplaint.image %>" alt="Complaint Image" class="image-preview">
         </div>
 
-        <!-- Sample Complaint Card 2 -->
-        <div class="complaint-card">
-            <div class="complaint-header">
-                <div class="complaint-type">Garbage Issue</div>
-                <div class="complaint-status">Status: Resolved</div>
-            </div>
-            <p class="complaint-description">Garbage is piling up in front of my house and is attracting stray animals.</p>
-            <p class="complaint-address">Address: 456, XYZ Avenue</p>
-            <p class="complaint-city">City: Delhi</p>
-            <img src="https://via.placeholder.com/400x300" alt="Complaint Image" class="image-preview">
-        </div>
-
-        <!-- Add more complaint cards dynamically here -->
-        <div class="complaint-card">
-            <div class="complaint-header">
-                <div class="complaint-type">Other</div>
-                <div class="complaint-status">Status: In Progress</div>
-            </div>
-            <p class="complaint-description">Request for additional streetlights on the main road.</p>
-            <p class="complaint-address">Address: 789, DEF Road</p>
-            <p class="complaint-city">City: Bangalore</p>
-            <img src="https://via.placeholder.com/400x300" alt="Complaint Image" class="image-preview">
-        </div>
+        <% }); %>
+        
     </div>
 </div>
 
 <script>
-    // Placeholder function for editing profile
-    function editProfile() {
-        alert("Profile editing feature will be implemented soon!");
-    }
+   
 </script>
 
 </body>
