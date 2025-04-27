@@ -3,32 +3,42 @@ name: Docker Compose CI
 on:
   push:
     branches:
-      - final2  # Your target branch (can change to 'main' or any other)
+      - final2  # Trigger when changes are pushed to the 'final2' branch
 
 jobs:
-  build-and-run:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: final2  # Replace with desired branch name
+          ref: final2  # Replace with your desired branch name
 
-      - name: Set up Docker Compose
+      # Step 2: Verify Docker and Docker Compose are available
+      - name: Verify Docker and Docker Compose version
         run: |
-          docker compose --version
+          docker --version  # Verify Docker installation
+          docker compose --version  # Verify Docker Compose installation
 
-      - name: Build and Run Docker Compose
+      # Step 3: Build the Docker images using Docker Compose
+      - name: Build Docker Image
         run: |
-          docker compose up -d --build
+          docker compose up -d --build  # Build the images as defined in your docker-compose.yml
 
-      - name: Wait a few seconds for containers to initialize
-        run: sleep 10
+      # Step 4: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Show running containers
-        run: docker ps
+      # Step 5: Push the Docker image to Docker Hub using Docker Compose
+      - name: Push Docker image
+        run: |
+          docker compose push  # Push the built images to Docker Hub
 
+      # Step 6: Optional - Tear down services after the job is finished
       - name: Tear down services
         if: always()
-        run: docker compose down
+        run: |
+          docker compose down  # Clean up by bringing down the services
