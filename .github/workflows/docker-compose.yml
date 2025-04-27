@@ -21,7 +21,7 @@ jobs:
 
       - name: Build and Run Docker Compose
         run: |
-          docker-compose up -d --build
+          docker compose up -d --build
 
       - name: Wait a few seconds for containers to initialize
         run: sleep 10
